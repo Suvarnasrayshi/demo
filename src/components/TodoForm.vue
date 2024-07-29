@@ -17,34 +17,35 @@
   </div>
 </template>
 
-<script setup>
-import { ref, defineProps } from 'vue';
+<script lang="ts">
+export default {
+  name: 'PostForm',
+  props: {
+    userId: {
+      type: Number,
+      required: true
+    }
+  },
+  data() {
+    return {
+      title: '',
+      completed: false
+    };
+  },
+  methods: {
+    async submitTodo() {
+      const newTodo = {
+        title: this.title,
+        competed:this.completed,
+        userId: this.userId
+      };
+      this.$store.dispatch('fetchTodo',{newTodo:newTodo});
 
-const props = defineProps({
-  userId: Number,
-});
-
-const title = ref('');
-const completed = ref(false);
-console.log("OBJECTDATA",props.userId);
-const submitTodo = async () => {
-  const newTodo = {
-    title: title.value,
-    completed: completed.value,
-    userId: props.userId,
-  };
-
-  const response = await fetch('https://jsonplaceholder.typicode.com/todos', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newTodo),
-  });
-
-  const result = await response.json();
-  console.log('Created Todo:', result);
-  title.value = '';
-  completed.value = false;
+      this.title = '';
+      this.body = '';
+    }
+  },
+  mounted() {
+  },
 };
-</script>
+</script> 

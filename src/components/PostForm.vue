@@ -12,40 +12,37 @@
       <button type="submit">Submit</button>
     </form>
   </div>
-  </template>
-  
-   <script setup>
-   import { ref, defineProps } from 'vue';
-  
-   const props = defineProps({
-     userId: Number,
-   });
-  
-  
-   const title = ref('');
-   const body = ref('');
-   const submitPost = async () => {
-     const newPost = {
-       title: title.value,
-       body: body.value,
-       userId: props.userId,
+</template>
+
+<script>
+export default {
+  name: 'PostForm',
+  props: {
+    userId: {
+      type: Number,
+      required: true
+    }
+  },
+  data() {
+    return {
+      title: '',
+      body: ''
+    };
+  },
+  methods: {
+    async submitPost() {
+      const newPost = {
+        title: this.title,
+        body: this.body,
+        userId: this.userId
       };
-  console.log("userid"+props.userId);
-  
-     const response = await fetch('https:jsonplaceholder.typicode.com/posts', {
-       method: 'POST',
-       headers: {
-         'Content-Type': 'application/json',
-       },
-       body: JSON.stringify(newPost), 
-     });
-  
-     const result = await response.json();
-     console.log('Created Post:', result);
-  
-  
-  
-     title.value = '';
-     body.value = '';
-   };
-   </script>
+      console.log("userid " + this.userId);
+      this.$store.dispatch('fetchPost',{newPost:newPost});
+    
+
+      this.title = '';
+      this.body = '';
+    }
+  }
+};
+</script> 
