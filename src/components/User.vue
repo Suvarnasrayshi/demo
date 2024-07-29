@@ -23,12 +23,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-      v-for="users in user" :key="users.id"
-      >
-        <td>{{ users.name}}</td>
-        <td>{{  users.email }}</td>
-        <td>{{   users.phone }}</td>
+      <tr v-for="users in user" :key="users">
+        <td>{{users.name}}</td>
+        <td>{{users.email}}</td>
+        <td>{{users.phone}}</td>
         <td>{{users.address.city}}</td>
         <td>{{users.website}}</td>
         <td> <button rounded="xl" color="success" block variant="outlined" @click="gettodo(users.id) ">ToDo's</button></td>
@@ -36,19 +34,25 @@
     </tbody>
   </v-table>
 </template>
-<script setup>
-import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-const router = useRouter();
-const user =ref([]);
-onMounted(async()=>{
-  const response = await fetch('https://jsonplaceholder.typicode.com/users');
-  user.value = await response.json();
-  console.log('object',user.value);
-})
+<script lang="ts">
+import { defineComponent } from 'vue'
 
-const gettodo =(userId)=>{
-  console.log(userId);
-router.push({name:'userDetails', params:{userId}})
+export default defineComponent( {
+  name:'User',
+ mounted() {
+this.$store.dispatch('fetchUsers');
+},
+computed: {
+  user () :any{
+      return this.$store.state.todo.users
+    },
+  },
+  methods:{
+    gettodo(userId:number){
+  
+    console.log(userId)
+    this.$router.push({name:'userDetails',params:{userId}})
+  }
 }
-</script>
+})
+</script> 
